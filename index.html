@@ -331,7 +331,18 @@ function randomItem(array) {
 }
 
 function showMessage() {
-  const selectedCategory = randomItem(data.categories);
+  let categories = [...data.categories];
+  const currentHour = new Date().getHours();
+
+  if (currentHour >= 20 || currentHour < 5) {
+    const nightCategories = data.categories.filter(category =>
+      category.theme.includes("整えることば") ||
+      category.theme.includes("巡りのことば")
+    );
+    categories = categories.concat(nightCategories);
+  }
+
+  const selectedCategory = randomItem(categories);
 
   document.getElementById("theme").innerText = selectedCategory.theme;
   document.getElementById("message").innerText = randomItem(selectedCategory.messages);
