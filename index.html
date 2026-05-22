@@ -3,65 +3,121 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>今日の巡りメッセージ</title>
+<title>今日のめぐりメッセージ</title>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <style>
+
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: "Yu Mincho", serif;
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
   background: linear-gradient(180deg, #f8f3e8, #eef3e6);
   color: #5a4a35;
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 22px;
 }
 
 .app {
-  max-width: 520px;
   width: 100%;
-  background: rgba(255,252,245,0.92);
-  border-radius: 28px;
-  padding: 32px 24px;
+  max-width: 430px;
   text-align: center;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.top-card,
+.message-card {
+  background: rgba(255,252,245,0.94);
+  border-radius: 30px;
+  padding: 34px 22px;
+  box-shadow: 0 12px 28px rgba(120,95,55,0.12);
 }
 
 h1 {
+  font-size: 34px;
+  line-height: 1.45;
   color: #7a6542;
+  margin: 10px 0 24px;
+  letter-spacing: 0.04em;
+}
+
+.lead {
+  font-size: 16px;
+  line-height: 1.9;
+  margin-bottom: 26px;
 }
 
 button {
-  background: #c5a45b;
-  color: white;
   border: none;
   border-radius: 999px;
-  padding: 14px 28px;
+  padding: 14px 26px;
   font-size: 16px;
   cursor: pointer;
+  font-family: inherit;
 }
 
-.card {
-  margin-top: 24px;
-  padding: 20px;
-  border-radius: 20px;
-  background: #fffaf0;
-  display: none;
+.main-btn {
+  background: #c7a85d;
+  color: white;
 }
 
-.message {
-  white-space: pre-line;
-  line-height: 1.9;
-  font-size: 20px;
-}
-
-.energy,
-.action,
-.ending {
+.sub-btn {
   margin-top: 18px;
+  background: transparent;
+  color: #9b7d3f;
+  border: 1px solid #d3b66e;
+}
+
+.message-card {
+  display: none;
+  margin-top: 22px;
+}
+
+.category {
+  font-size: 16px;
+  margin-bottom: 26px;
+  color: #6f7f4d;
+}
+
+.main-message {
+  font-size: 30px;
+  line-height: 1.75;
+  margin-bottom: 26px;
+  white-space: pre-line;
+}
+
+.energy {
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.action-box {
+  background: #f3eadc;
+  border-radius: 20px;
+  padding: 16px;
+  margin: 18px 0;
+  font-size: 15px;
   line-height: 1.8;
 }
+
+.ending {
+  font-size: 14px;
+  color: #7d8a5a;
+  margin-top: 18px;
+}
+
+.share-area {
+  display: none;
+  margin-bottom: 28px;
+}
+
+.footer {
+  font-size: 12px;
+  margin-top: 22px;
+  color: #9b8a6a;
+}
+
 </style>
 </head>
 
@@ -69,31 +125,51 @@ button {
 
 <div class="app">
 
-  <h1>🌱 今日の巡りメッセージ</h1>
+  <div class="top-card">
 
-  <p>
-    あなたの足元に、<br>
-    今日必要な巡りの言葉を届けます。
-  </p>
+    <h1>🌱 今日のめぐり<br>メッセージ</h1>
 
-  <button onclick="showMessage()">
-    メッセージを受け取る
-  </button>
+    <p class="lead">
+      あなたの足元に、<br>
+      今日必要なめぐりの言葉を届けます。
+    </p>
 
-  <div class="card" id="card">
+    <button class="main-btn" onclick="showMessage()">
+      メッセージを受け取る
+    </button>
 
-    <div id="theme"></div>
+  </div>
 
-    <br>
+  <div id="messageCard" class="message-card">
 
-    <div class="message" id="message"></div>
+    <div class="category" id="theme"></div>
+
+    <div class="main-message" id="message"></div>
 
     <div class="energy" id="energy"></div>
 
-    <div class="action" id="action"></div>
+    <div class="action-box">
+
+      <div>🌿 今日の整えアクション</div>
+
+      <div id="action"></div>
+
+    </div>
 
     <div class="ending" id="ending"></div>
 
+  </div>
+
+  <div class="share-area" id="shareArea">
+
+    <button class="sub-btn" onclick="downloadImage()">
+      このメッセージを画像保存
+    </button>
+
+  </div>
+
+  <div class="footer">
+    めぐりを思い出す、小さな場所
   </div>
 
 </div>
@@ -110,32 +186,35 @@ const themes = [
 ];
 
 const messages = [
-  "焦る時ほど、\n足元を整える。",
-  "巡りは、\n静かな場所から始まる。",
-  "今は根を育てる時間かもしれません。",
-  "安心は、小さな整えから始まる。",
-  "受け取ることも、巡りを起こす力。",
-  "今日は、頑張るより満たす日。"
+  "安心は、\n小さな整えから\n始まる。",
+  "焦る時ほど、\n先に足元を整える。",
+  "止まっているように見える時も、\n巡りは静かに動いている。",
+  "芽が出ない時は、\n根を伸ばしている途中かもしれません。",
+  "受け取ることも、\n巡りを起こす大切な力です。",
+  "今日は、\n動くより"満たす"を優先してみて。"
 ];
 
 const energies = [
-  "🌙 内側を満たす日",
-  "☀️ 軽やかに動く日",
+  "🌙 内側を満たす流れの日",
+  "☀️ 軽やかに動く流れの日",
   "🍃 風通しを良くする日",
-  "🌱 根を育てる日"
+  "🌱 根を育てる日",
+  "🌾 小さな豊かさを受け取る日"
 ];
 
 const actions = [
-  "温かい飲み物をゆっくり飲む",
   "空を見上げて深呼吸する",
+  "温かい飲み物をゆっくり飲む",
   "机の上をひとつ整える",
-  "窓を開けて風を入れる"
+  "窓を開けて風を入れる",
+  "今日は無理に答えを出さず、流れを待つ"
 ];
 
 const endings = [
   "今日も巡りは続いている🌱",
   "あなたのペースで大丈夫。",
-  "小さな整えが未来を育てる。"
+  "小さな整えが未来を育てる。",
+  "安心は、足元から育っていく。"
 ];
 
 function randomItem(array) {
@@ -144,7 +223,8 @@ function randomItem(array) {
 
 function showMessage() {
 
-  document.getElementById("card").style.display = "block";
+  document.getElementById("messageCard").style.display = "block";
+  document.getElementById("shareArea").style.display = "block";
 
   document.getElementById("theme").innerText =
     randomItem(themes);
@@ -156,11 +236,36 @@ function showMessage() {
     randomItem(energies);
 
   document.getElementById("action").innerText =
-    "🌿 今日の整えアクション\n" +
     randomItem(actions);
 
   document.getElementById("ending").innerText =
     randomItem(endings);
+
+  document.getElementById("messageCard").scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
+function downloadImage() {
+
+  const card = document.getElementById("messageCard");
+
+  html2canvas(card, {
+    backgroundColor: "#fffaf0",
+    scale: 2
+  }).then(canvas => {
+
+    const link = document.createElement("a");
+
+    link.download = "meguri-message.png";
+
+    link.href = canvas.toDataURL("image/png");
+
+    link.click();
+
+  });
+
 }
 
 </script>
