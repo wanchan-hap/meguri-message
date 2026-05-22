@@ -8,7 +8,6 @@
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <style>
-
 body {
   margin: 0;
   min-height: 100vh;
@@ -18,6 +17,7 @@ body {
   display: flex;
   justify-content: center;
   padding: 22px;
+  box-sizing: border-box;
 }
 
 .app {
@@ -32,6 +32,7 @@ body {
   border-radius: 30px;
   padding: 34px 22px;
   box-shadow: 0 12px 28px rgba(120,95,55,0.12);
+  box-sizing: border-box;
 }
 
 h1 {
@@ -117,7 +118,6 @@ button {
   margin-top: 22px;
   color: #9b8a6a;
 }
-
 </style>
 </head>
 
@@ -149,11 +149,8 @@ button {
     <div class="energy" id="energy"></div>
 
     <div class="action-box">
-
       <div>🌿 今日の整えアクション</div>
-
       <div id="action"></div>
-
     </div>
 
     <div class="ending" id="ending"></div>
@@ -161,11 +158,9 @@ button {
   </div>
 
   <div class="share-area" id="shareArea">
-
     <button class="sub-btn" onclick="downloadImage()">
       このメッセージを画像保存
     </button>
-
   </div>
 
   <div class="footer">
@@ -175,7 +170,6 @@ button {
 </div>
 
 <script>
-
 const themes = [
   "🌱 土のことば",
   "🌾 豊かさのことば",
@@ -191,7 +185,7 @@ const messages = [
   "止まっているように見える時も、\n巡りは静かに動いている。",
   "芽が出ない時は、\n根を伸ばしている途中かもしれません。",
   "受け取ることも、\n巡りを起こす大切な力です。",
-  "今日は、\n動くより"満たす"を優先してみて。"
+  "今日は、\n動くより“満たす”を優先してみて。"
 ];
 
 const energies = [
@@ -222,52 +216,42 @@ function randomItem(array) {
 }
 
 function showMessage() {
+  const messageCard = document.getElementById("messageCard");
+  const shareArea = document.getElementById("shareArea");
 
-  document.getElementById("messageCard").style.display = "block";
-  document.getElementById("shareArea").style.display = "block";
+  messageCard.style.display = "block";
+  shareArea.style.display = "block";
 
-  document.getElementById("theme").innerText =
-    randomItem(themes);
+  document.getElementById("theme").innerText = randomItem(themes);
+  document.getElementById("message").innerText = randomItem(messages);
+  document.getElementById("energy").innerText = randomItem(energies);
+  document.getElementById("action").innerText = randomItem(actions);
+  document.getElementById("ending").innerText = randomItem(endings);
 
-  document.getElementById("message").innerText =
-    randomItem(messages);
-
-  document.getElementById("energy").innerText =
-    randomItem(energies);
-
-  document.getElementById("action").innerText =
-    randomItem(actions);
-
-  document.getElementById("ending").innerText =
-    randomItem(endings);
-
-  document.getElementById("messageCard").scrollIntoView({
+  messageCard.scrollIntoView({
     behavior: "smooth",
     block: "center"
   });
 }
 
 function downloadImage() {
-
   const card = document.getElementById("messageCard");
+
+  if (typeof html2canvas === "undefined") {
+    alert("画像保存の準備中です。少し待ってからもう一度お試しください。");
+    return;
+  }
 
   html2canvas(card, {
     backgroundColor: "#fffaf0",
     scale: 2
-  }).then(canvas => {
-
+  }).then(function(canvas) {
     const link = document.createElement("a");
-
     link.download = "meguri-message.png";
-
     link.href = canvas.toDataURL("image/png");
-
     link.click();
-
   });
-
 }
-
 </script>
 
 </body>
