@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>今日のめぐりメッセージ</title>
-
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-
 <style>
+* { box-sizing: border-box; }
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -16,8 +16,8 @@ body {
   color: #5a4a35;
   display: flex;
   justify-content: center;
+  align-items: center;
   padding: 22px;
-  box-sizing: border-box;
 }
 
 .app {
@@ -26,13 +26,16 @@ body {
   text-align: center;
 }
 
+.screen {
+  width: 100%;
+}
+
 .top-card,
 .message-card {
   background: rgba(255,252,245,0.94);
   border-radius: 30px;
   padding: 34px 22px;
   box-shadow: 0 12px 28px rgba(120,95,55,0.12);
-  box-sizing: border-box;
 }
 
 h1 {
@@ -64,33 +67,32 @@ button {
 }
 
 .sub-btn {
-  margin-top: 18px;
+  margin-top: 16px;
   background: transparent;
   color: #9b7d3f;
   border: 1px solid #d3b66e;
 }
 
-.message-card {
+#resultScreen {
   display: none;
-  margin-top: 22px;
 }
 
 .category {
   font-size: 16px;
-  margin-bottom: 26px;
+  margin-bottom: 22px;
   color: #6f7f4d;
 }
 
 .main-message {
-  font-size: 30px;
-  line-height: 1.75;
-  margin-bottom: 26px;
+  font-size: 28px;
+  line-height: 1.7;
+  margin-bottom: 22px;
   white-space: pre-line;
 }
 
 .energy {
   font-size: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .action-box {
@@ -105,12 +107,7 @@ button {
 .ending {
   font-size: 14px;
   color: #7d8a5a;
-  margin-top: 18px;
-}
-
-.share-area {
-  display: none;
-  margin-bottom: 28px;
+  margin-top: 16px;
 }
 
 .footer {
@@ -120,51 +117,52 @@ button {
 }
 </style>
 </head>
-
 <body>
 
 <div class="app">
 
-  <div class="top-card">
+  <div id="topScreen" class="screen">
+    <div class="top-card">
+      <h1>🌱 今日のめぐり<br>メッセージ</h1>
 
-    <h1>🌱 今日のめぐり<br>メッセージ</h1>
+      <p class="lead">
+        あなたの足元に、<br>
+        今日必要なめぐりの言葉を届けます。
+      </p>
 
-    <p class="lead">
-      あなたの足元に、<br>
-      今日必要なめぐりの言葉を届けます。
-    </p>
-
-    <button class="main-btn" onclick="showMessage()">
-      メッセージを受け取る
-    </button>
-
-  </div>
-
-  <div id="messageCard" class="message-card">
-
-    <div class="category" id="theme"></div>
-
-    <div class="main-message" id="message"></div>
-
-    <div class="energy" id="energy"></div>
-
-    <div class="action-box">
-      <div>🌿 今日の整えアクション</div>
-      <div id="action"></div>
+      <button id="messageButton" class="main-btn" type="button">
+        メッセージを受け取る
+      </button>
     </div>
 
-    <div class="ending" id="ending"></div>
-
+    <div class="footer">
+      めぐりを思い出す、小さな場所
+    </div>
   </div>
 
-  <div class="share-area" id="shareArea">
-    <button class="sub-btn" onclick="downloadImage()">
+  <div id="resultScreen" class="screen">
+    <div id="messageCard" class="message-card">
+      <div class="category" id="theme"></div>
+      <div class="main-message" id="message"></div>
+      <div class="energy" id="energy"></div>
+
+      <div class="action-box">
+        <div>🌿 今日の整えアクション</div>
+        <div id="action"></div>
+      </div>
+
+      <div class="ending" id="ending"></div>
+    </div>
+
+    <button id="saveButton" class="sub-btn" type="button">
       このメッセージを画像保存
     </button>
-  </div>
 
-  <div class="footer">
-    めぐりを思い出す、小さな場所
+    <br>
+
+    <button id="backButton" class="sub-btn" type="button">
+      もう一度受け取る
+    </button>
   </div>
 
 </div>
@@ -216,22 +214,19 @@ function randomItem(array) {
 }
 
 function showMessage() {
-  const messageCard = document.getElementById("messageCard");
-  const shareArea = document.getElementById("shareArea");
+  document.getElementById("theme").textContent = randomItem(themes);
+  document.getElementById("message").textContent = randomItem(messages);
+  document.getElementById("energy").textContent = randomItem(energies);
+  document.getElementById("action").textContent = randomItem(actions);
+  document.getElementById("ending").textContent = randomItem(endings);
 
-  messageCard.style.display = "block";
-  shareArea.style.display = "block";
+  document.getElementById("topScreen").style.display = "none";
+  document.getElementById("resultScreen").style.display = "block";
+}
 
-  document.getElementById("theme").innerText = randomItem(themes);
-  document.getElementById("message").innerText = randomItem(messages);
-  document.getElementById("energy").innerText = randomItem(energies);
-  document.getElementById("action").innerText = randomItem(actions);
-  document.getElementById("ending").innerText = randomItem(endings);
-
-  messageCard.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
+function backToTop() {
+  document.getElementById("resultScreen").style.display = "none";
+  document.getElementById("topScreen").style.display = "block";
 }
 
 function downloadImage() {
@@ -252,6 +247,10 @@ function downloadImage() {
     link.click();
   });
 }
+
+document.getElementById("messageButton").addEventListener("click", showMessage);
+document.getElementById("saveButton").addEventListener("click", downloadImage);
+document.getElementById("backButton").addEventListener("click", showMessage);
 </script>
 
 </body>
