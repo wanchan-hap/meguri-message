@@ -6,167 +6,169 @@
 <title>今日のめぐりメッセージ</title>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <style>
-  * { box-sizing: border-box; }
+:root {
+  --bg1: #f8f3e8;
+  --bg2: #eef3e6;
+  --card: rgba(255,252,245,0.95);
+  --text: #5a4a35;
+  --title: #7a6542;
+  --green: #6f7f4d;
+  --gold: #c7a85d;
+  --soft: #f3eadc;
+}
 
-  body {
-    margin: 0;
-    min-height: 100vh;
-    font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
-    background: linear-gradient(180deg, #f8f3e8, #eef3e6);
-    color: #5a4a35;
-  }
+* { box-sizing: border-box; }
 
-  .screen {
-    min-height: 100vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 22px;
-  }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  background: linear-gradient(180deg, var(--bg1), var(--bg2));
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
 
-  .hidden { display: none; }
+.app {
+  width: 100%;
+  max-width: 430px;
+  text-align: center;
+}
 
-  .top-card,
-  .message-card {
-    width: 100%;
-    max-width: 430px;
-    background: rgba(255,252,245,0.94);
-    border-radius: 30px;
-    padding: 34px 24px;
-    text-align: center;
-    box-shadow: 0 12px 28px rgba(120,95,55,0.12);
-  }
+.screen {
+  display: none;
+}
 
-  h1 {
-    font-size: 34px;
-    line-height: 1.45;
-    color: #7a6542;
-    margin: 4px 0 24px;
-    letter-spacing: 0.04em;
-  }
+.screen.active {
+  display: block;
+}
 
-  .lead {
-    font-size: 16px;
-    line-height: 1.9;
-    margin-bottom: 26px;
-  }
+.top-card,
+.message-card {
+  background: var(--card);
+  border-radius: 30px;
+  padding: 34px 22px;
+  box-shadow: 0 12px 28px rgba(120,95,55,0.12);
+}
 
-  button {
-    border-radius: 999px;
-    padding: 14px 26px;
-    font-size: 16px;
-    cursor: pointer;
-    font-family: inherit;
-  }
+h1 {
+  font-size: 34px;
+  line-height: 1.45;
+  color: var(--title);
+  margin: 10px 0 24px;
+  letter-spacing: 0.04em;
+}
 
-  .main-btn {
-    border: none;
-    background: #c7a85d;
-    color: white;
-    box-shadow: 0 8px 18px rgba(150,120,60,0.22);
-  }
+.lead {
+  font-size: 16px;
+  line-height: 1.9;
+  margin-bottom: 26px;
+}
 
-  .message-wrap {
-    width: 100%;
-    max-width: 430px;
-    text-align: center;
-  }
+button {
+  border: none;
+  border-radius: 999px;
+  padding: 14px 26px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: inherit;
+}
 
-  .message-card {
-    padding: 30px 22px 28px;
-  }
+.main-btn {
+  background: var(--gold);
+  color: white;
+  box-shadow: 0 8px 16px rgba(160,128,70,0.22);
+}
 
-  .category {
-    font-size: 16px;
-    margin-bottom: 22px;
-    color: #6f7f4d;
-  }
+.sub-btn {
+  background: transparent;
+  color: #9b7d3f;
+  border: 1px solid #d3b66e;
+  margin-top: 14px;
+}
 
-  .main-message {
-    font-size: 29px;
-    line-height: 1.72;
-    margin-bottom: 22px;
-    white-space: pre-line;
-  }
+.button-row {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
 
-  .energy {
-    font-size: 15px;
-    margin-bottom: 18px;
-  }
+.category {
+  font-size: 16px;
+  margin-bottom: 24px;
+  color: var(--green);
+}
 
-  .action-box {
-    background: #f3eadc;
-    border-radius: 20px;
-    padding: 15px 16px;
-    margin: 16px 0;
-    font-size: 15px;
-    line-height: 1.8;
-  }
+.main-message {
+  font-size: 27px;
+  line-height: 1.7;
+  margin-bottom: 24px;
+  white-space: pre-line;
+}
 
-  .action-title {
-    margin-bottom: 4px;
-  }
+.energy {
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
 
-  .ending {
-    font-size: 14px;
-    color: #7d8a5a;
-    margin-top: 16px;
-  }
+.action-box {
+  background: var(--soft);
+  border-radius: 20px;
+  padding: 15px;
+  margin: 16px 0;
+  font-size: 15px;
+  line-height: 1.8;
+}
 
-  .button-area {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 18px;
-    align-items: center;
-  }
+.action-title {
+  margin-bottom: 6px;
+  color: #7a6542;
+}
 
-  .sub-btn {
-    width: min(100%, 340px);
-    background: rgba(255,252,245,0.8);
-    color: #9b7d3f;
-    border: 1px solid #d3b66e;
-  }
+.ending {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--green);
+  margin-top: 16px;
+}
 
-  .text-btn {
-    background: transparent;
-    border: none;
-    color: #8d7d60;
-    font-size: 14px;
-    padding: 6px 12px;
-  }
+.footer {
+  font-size: 12px;
+  margin-top: 20px;
+  color: #9b8a6a;
+}
 
-  .footer {
-    font-size: 12px;
-    margin-top: 18px;
-    color: #9b8a6a;
-  }
-
-  @media (max-height: 720px) {
-    .screen { align-items: flex-start; padding-top: 18px; }
-    .message-card { padding: 24px 20px; }
-    .main-message { font-size: 25px; line-height: 1.65; }
-    .category { margin-bottom: 16px; }
-    .action-box { margin: 12px 0; }
-  }
+@media (max-width: 380px) {
+  body { padding: 14px; }
+  .top-card, .message-card { padding: 28px 18px; }
+  h1 { font-size: 30px; }
+  .main-message { font-size: 24px; }
+  button { font-size: 15px; padding: 13px 22px; }
+}
 </style>
 </head>
+
 <body>
+<div class="app">
 
-<section id="topScreen" class="screen">
-  <div class="top-card">
-    <h1>🌱 今日のめぐり<br>メッセージ</h1>
-    <p class="lead">
-      あなたの足元に、<br>
-      今日必要なめぐりの言葉を届けます。
-    </p>
-    <button class="main-btn" onclick="showMessage()">メッセージを受け取る</button>
+  <div id="topScreen" class="screen active">
+    <div class="top-card">
+      <h1>🌱 今日のめぐり<br>メッセージ</h1>
+      <p class="lead">
+        あなたの足元に、<br>
+        今日必要なめぐりの言葉を届けます。
+      </p>
+      <button class="main-btn" onclick="showMessage()">メッセージを受け取る</button>
+    </div>
+    <div class="footer">めぐりを思い出す、小さな場所</div>
   </div>
-</section>
 
-<section id="messageScreen" class="screen hidden">
-  <div class="message-wrap">
+  <div id="messageScreen" class="screen">
     <div id="messageCard" class="message-card">
       <div class="category" id="theme"></div>
       <div class="main-message" id="message"></div>
@@ -178,76 +180,168 @@
       <div class="ending" id="ending"></div>
     </div>
 
-    <div class="button-area">
-      <button class="sub-btn" onclick="downloadImage()">このメッセージを画像保存</button>
-      <button class="text-btn" onclick="backToTop()">← トップへ戻る</button>
+    <div class="button-row">
+      <button class="main-btn" onclick="downloadImage()">このメッセージを画像保存</button>
+      <button class="sub-btn" onclick="showMessage()">もう一度受け取る</button>
+      <button class="sub-btn" onclick="backToTop()">トップへ戻る</button>
     </div>
-
-    <div class="footer">めぐりを思い出す、小さな場所</div>
   </div>
-</section>
+
+</div>
 
 <script>
-const themes = [
-  "🌱 土のことば",
-  "🌾 豊かさのことば",
-  "🪷 整えることば",
-  "🍃 巡りのことば",
-  "🐉 守護ドラゴンメッセージ",
-  "☀️🌙 月と太陽のことば"
-];
-
-const messages = [
-  "安心は、\n小さな整えから\n始まる。",
-  "焦る時ほど、\n先に足元を整える。",
-  "止まっているように見える時も、\n巡りは静かに動いている。",
-  "芽が出ない時は、\n根を伸ばしている途中かもしれません。",
-  "受け取ることも、\n巡りを起こす大切な力です。",
-  "今日は、\n動くより“満たす”を優先してみて。"
-];
-
-const energies = [
-  "🌙 内側を満たす流れの日",
-  "☀️ 軽やかに動く流れの日",
-  "🍃 風通しを良くする日",
-  "🌱 根を育てる日",
-  "🌾 小さな豊かさを受け取る日"
-];
-
-const actions = [
-  "空を見上げて深呼吸する",
-  "温かい飲み物をゆっくり飲む",
-  "机の上をひとつ整える",
-  "窓を開けて風を入れる",
-  "今日は無理に答えを出さず、流れを待つ"
-];
-
-const endings = [
-  "今日も巡りは続いている🌱",
-  "あなたのペースで大丈夫。",
-  "小さな整えが未来を育てる。",
-  "安心は、足元から育っていく。"
-];
+const data = {
+  categories: [
+    {
+      theme: "🌱 土のことば",
+      messages: [
+        "芽が出ない時は、\n根を伸ばしている途中かもしれません。",
+        "焦らなくても、\n土の中ではちゃんと育っています。",
+        "育つ前には、\n静かな時間が必要なこともある。",
+        "今日は、\n“整える”を優先してみる。",
+        "小さな積み重ねは、\n未来の土になる。",
+        "今は無理に\n咲かなくても大丈夫。",
+        "土が整うと、\n自然に巡り始める。",
+        "頑張れない日は、\n休むことも育つ力。",
+        "安心できる場所から、\n芽は育っていく。",
+        "見えないところでも、\n命はちゃんと動いている。"
+      ]
+    },
+    {
+      theme: "🌾 豊かさのことば",
+      messages: [
+        "豊かさは、\n安心して受け取れた量で\n巡り始める。",
+        "“足りない”より、\n“もうある”を感じてみる。",
+        "受け取ることも、\n巡りを生む力。",
+        "安心は、\n豊かさの土台になる。",
+        "循環は、\n止まったように見えても続いている。",
+        "与えるだけでなく、\n自分も満たしていい。",
+        "豊かさは、\n緩んだ場所に流れ込む。",
+        "今日は、\n小さな豊かさをひとつ見つけてみる。",
+        "頑張りすぎた心にも、\nやさしい巡りは必要。",
+        "安心できる場所に、\n豊かさは集まり始める。"
+      ]
+    },
+    {
+      theme: "🪷 整えることば",
+      messages: [
+        "焦る時ほど、\n先に足元を整える。",
+        "呼吸が深くなると、\n巡りも整い始める。",
+        "今日は、\n“余白”をつくる日にしてみる。",
+        "整えることは、\n自分に戻ること。",
+        "答えを急がなくても\n大丈夫。",
+        "まずは、\n安心できる空間をひとつ。",
+        "静かな時間が、\n心を整えてくれる。",
+        "小さな整えが、\n大きな流れを変えていく。",
+        "心が疲れた日は、\n頑張るより緩める。",
+        "今の自分を責めずに、\nやさしく整えていく。"
+      ]
+    },
+    {
+      theme: "🍃 巡りのことば",
+      messages: [
+        "止まっているように見える時も、\n巡りは静かに動いている。",
+        "流れを変えたい時ほど、\n呼吸を整えてみる。",
+        "巡りは、\n“整った場所”から始まる。",
+        "今は急がず、\n流れを感じる時間。",
+        "小さな変化は、\nもう巡り始めている証。",
+        "今日は、\n風通しを良くする日にしてみる。",
+        "流れに逆らわなくても\n大丈夫。",
+        "頑張るより、\n“巡る余白”をつくってみる。",
+        "巡りは、\n安心できる場所に戻ってくる。",
+        "変化は、\n静かに始まることもある。"
+      ]
+    },
+    {
+      theme: "🐉 守護ドラゴンメッセージ",
+      messages: [
+        "風龍は、\n“急がなくても流れは来る”\nと伝えています。",
+        "土龍は、\n“足元を整えることで道が開く”\nと見守っています。",
+        "水龍は、\n“今は無理に形にしなくてもいい”\nと伝えています。",
+        "火龍は、\n“小さな情熱を大切に”\nと背中を押しています。",
+        "今日は、\n守られている感覚を思い出してみる。",
+        "龍たちは、\n静かな巡りもちゃんと見ています。",
+        "不安な時ほど、\n深呼吸して空を見上げてみる。",
+        "“今のままでも大丈夫”\nと龍は伝えています。",
+        "必要な流れは、\n必要な時にやってくる。",
+        "今日は、\n安心して流れに身をゆだねてみる。"
+      ]
+    },
+    {
+      theme: "☀️🌙 月と太陽のことば",
+      messages: [
+        "今日は、\n動くより“満たす”を優先してみて。",
+        "外へ向かう力と、\n内側を整える力。\nどちらも大切。",
+        "今日は、\n自分を休ませることも必要な巡り。",
+        "満ちる時も、\n静まる時も、\nどちらも自然な流れ。",
+        "太陽のように動く日も、\n月のように静かな日もある。",
+        "今日は、\n心が安心する方を選んでみる。",
+        "内側が満たされると、\n自然に外側も巡り始める。",
+        "無理に輝かなくても、\nちゃんと光はある。",
+        "今日は、\n“整える光”を意識してみる。",
+        "安心できる場所で、\nゆっくりエネルギーを満たしていく。"
+      ]
+    }
+  ],
+  energies: [
+    "🌙 内側を満たす流れの日",
+    "☀️ 軽やかに動く流れの日",
+    "🍃 風通しを良くする日",
+    "🌱 根を育てる日",
+    "🌾 小さな豊かさを受け取る日",
+    "🪷 心と場を整える日",
+    "🐉 見守りを感じる日",
+    "🌕 満ちているものに気づく日",
+    "🌑 静かにリセットする日",
+    "🌿 自分のペースに戻る日"
+  ],
+  actions: [
+    "空を見上げて深呼吸する",
+    "温かい飲み物をゆっくり飲む",
+    "机の上をひとつ整える",
+    "窓を開けて風を入れる",
+    "今日は無理に答えを出さず、流れを待つ",
+    "足元を感じながら、ゆっくり歩く",
+    "“ありがとう”をひとつ声に出す",
+    "スマホを置いて、3分だけ目を閉じる",
+    "好きな香りをひとつ選ぶ",
+    "水を一杯、丁寧に飲む",
+    "財布やバッグの中を少し整える",
+    "今日できたことをひとつ思い出す"
+  ],
+  endings: [
+    "今日も巡りは続いている🌱",
+    "あなたのペースで大丈夫。",
+    "小さな整えが未来を育てる。",
+    "安心は、足元から育っていく。",
+    "今日の一歩が、未来の土になります。",
+    "必要な流れは、静かに近づいています。",
+    "今ここから、また巡り始める。",
+    "あなたの中の巡りを信じて大丈夫。"
+  ]
+};
 
 function randomItem(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
 function showMessage() {
-  document.getElementById("theme").innerText = randomItem(themes);
-  document.getElementById("message").innerText = randomItem(messages);
-  document.getElementById("energy").innerText = randomItem(energies);
-  document.getElementById("action").innerText = randomItem(actions);
-  document.getElementById("ending").innerText = randomItem(endings);
+  const selectedCategory = randomItem(data.categories);
 
-  document.getElementById("topScreen").classList.add("hidden");
-  document.getElementById("messageScreen").classList.remove("hidden");
+  document.getElementById("theme").innerText = selectedCategory.theme;
+  document.getElementById("message").innerText = randomItem(selectedCategory.messages);
+  document.getElementById("energy").innerText = randomItem(data.energies);
+  document.getElementById("action").innerText = randomItem(data.actions);
+  document.getElementById("ending").innerText = randomItem(data.endings);
+
+  document.getElementById("topScreen").classList.remove("active");
+  document.getElementById("messageScreen").classList.add("active");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function backToTop() {
-  document.getElementById("messageScreen").classList.add("hidden");
-  document.getElementById("topScreen").classList.remove("hidden");
+  document.getElementById("messageScreen").classList.remove("active");
+  document.getElementById("topScreen").classList.add("active");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -263,9 +357,10 @@ function downloadImage() {
     link.download = "meguri-message.png";
     link.href = canvas.toDataURL("image/png");
     link.click();
+  }).catch(() => {
+    alert("画像保存に失敗しました。もう一度お試しください。");
   });
 }
 </script>
-
 </body>
 </html>
