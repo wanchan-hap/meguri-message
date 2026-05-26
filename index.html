@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>今日のめぐりメッセージ</title>
+  
+<!-- ホーム画面用のアプリ名 -->
+<link rel="apple-touch-icon" href="icon.png">
+  
+<meta name="apple-mobile-web-app-title" content="めぐりメッセージ">
+<meta name="application-name" content=""めぐりメッセージ">
+<meta name="apple-mobile-web-app-capable" content="yes"> 
+  
+  
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <style>
 :root {
@@ -158,7 +167,12 @@ button {
 
   <div id="topScreen" class="screen active">
     <div class="top-card">
-      <h1>🌱 今日のめぐり<br>メッセージ</h1>
+      <h1>
+      今日のめぐり<br>
+      <span style="font-size:0.6em;">🌱</span>   
+      メッセージ
+      <span style="font-size:0.7em;">🌸</span>
+      </h1>
       <p class="lead">
         あなたの足元に、<br>
         今日必要なめぐりの言葉を届けます。
@@ -326,7 +340,18 @@ function randomItem(array) {
 }
 
 function showMessage() {
-  const selectedCategory = randomItem(data.categories);
+  let categories = [...data.categories];
+  const currentHour = new Date().getHours();
+
+  if (currentHour >= 20 || currentHour < 5) {
+    const nightCategories = data.categories.filter(category =>
+      category.theme.includes("整えることば") ||
+      category.theme.includes("巡りのことば")
+    );
+    categories = categories.concat(nightCategories);
+  }
+
+  const selectedCategory = randomItem(categories);
 
   document.getElementById("theme").innerText = selectedCategory.theme;
   document.getElementById("message").innerText = randomItem(selectedCategory.messages);
